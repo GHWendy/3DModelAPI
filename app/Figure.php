@@ -1,0 +1,22 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Figure extends Model
+{
+    //
+    protected $fillable = [
+        //'user_id' no creo porque no les es permitido modificarlo
+        'name',
+        'image_preview',
+        'description',
+        'x',
+        'y',
+        'z',
+        'difficulty',
+        'glb_download',
+        'type'
+    ];
+}
