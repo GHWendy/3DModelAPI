@@ -13,7 +13,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        //listar
+        return response()->json(200);
     }
 
     /**
@@ -34,7 +35,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Crear usuario
+        return response()->json(200);
     }
 
     /**
@@ -45,7 +47,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        //mostrar un usuario
+        return response()->json(200);
     }
 
     /**
@@ -68,7 +71,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //Actualizar
+        return response()->json(200);
     }
 
     /**
@@ -79,6 +83,17 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Eliminar
+        return response()->json(200);
+    }
+
+    public function showFigures()
+    {
+        return response()->json(200);
+    }
+
+    public function showGroups()
+    {
+        return response()->json(200);
     }
 }
