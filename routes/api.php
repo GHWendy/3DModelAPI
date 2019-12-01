@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['prefix' => 'v1'], function () {
+    //Ejemplo de ruta para la versión 1
+    Route::get('users', 'Api\\v1\\UserController@index');
+});
 // Route::get('/users', function (Request $request){
 //     return '';
 // });

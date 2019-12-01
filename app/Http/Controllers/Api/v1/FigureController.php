@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Tag;
+use App\Http\Controllers\Controller;
+use App\Figure;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class FigureController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +42,10 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Tag  $tag
+     * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show(Figure $figure)
     {
         //
     }
@@ -52,10 +53,10 @@ class TagController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Tag  $tag
+     * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tag $tag)
+    public function edit(Figure $figure)
     {
         //
     }
@@ -64,10 +65,10 @@ class TagController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Tag  $tag
+     * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, Figure $figure)
     {
         //
     }
@@ -75,10 +76,10 @@ class TagController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Tag  $tag
+     * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy(Figure $figure)
     {
         //
     }
