@@ -8,6 +8,7 @@ use App\Http\Requests\FigureRules;
 use Illuminate\Http\Request;
 use App\Http\Resources\FigureResource;
 use App\Http\Resources\FigureCollection;
+use App\Exceptions\ErrorHandler;
 
 class FigureController extends Controller
 {
@@ -61,7 +62,7 @@ class FigureController extends Controller
         if( $figure ) {
             return new FigureResource($figure);
         }
-        return response()->json([],404);
+        (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }
 
     /**
@@ -82,12 +83,23 @@ class FigureController extends Controller
      * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Figure $figure)
+    public function update(FigureRules $request, $id)
     {
         $figure = Figure::find($id);
         if( $figure ) {
-            $figure->name = $request->input('data.attribute.name');
+            $figure->name = $request->input('data.attributes.name');
+            $figure->image_preview = $request->input('data.attributes.image_preview');
+            $figure->description = $request->input('data.attributes.description');
+            $figure->x = $request->input('data.attributes.dimensions.x');
+            $figure->y = $request->input('data.attributes.dimensions.y');
+            $figure->z = $request->input('data.attributes.dimensions.z');
+            $figure->difficulty = $request->input('data.attributes.difficulty');
+            $figure->glb_download = $request->input('data.attributes.glb_download');
+            $figure->type = $request->input('data.attributes.type');
+            $figure->save();
+            return new FigureResource($figure);
         }
+        (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }
 
     /**
@@ -96,8 +108,13 @@ class FigureController extends Controller
      * @param  \App\Figure  $figure
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Figure $figure)
+    public function destroy($id)
     {
-        //
+        $figure = Figure::find($id);
+        if($figure){
+            $figure->delete();
+            return response()->json('',204);
+        }
+        (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }
 }
