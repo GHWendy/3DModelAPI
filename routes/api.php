@@ -18,8 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'], function () {
+    $prefix = "Api\\v1\\";
     //Ejemplo de ruta para la versión 1
-    Route::get('users', 'Api\\v1\\UserController@index');
+    Route::get('users', $prefix.'UserController@index');
 });
 // Route::get('/users', function (Request $request){
 //     return '';
