@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
 use App\Comment;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,10 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($figure_id)
     {
-        //
+        $comments = Comment::all();
+        return 200;
     }
 
     /**
@@ -33,9 +35,12 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         //
+        //$comment = Comment::create($request);
+        //Asignar luego a la figura del comentario
+        return 200;
     }
 
     /**
@@ -78,8 +83,10 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        //$comment = Comment::find($id);
+        //$comment -> delete();
+        return 200;
     }
 }

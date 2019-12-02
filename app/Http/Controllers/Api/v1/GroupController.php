@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Figure;
+use App\Http\Controllers\Controller;
+use App\Group;
 use Illuminate\Http\Request;
 
-class FigureController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +42,10 @@ class FigureController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Figure  $figure
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function show(Figure $figure)
+    public function show(Group $group)
     {
         //
     }
@@ -52,10 +53,10 @@ class FigureController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Figure  $figure
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function edit(Figure $figure)
+    public function edit(Group $group)
     {
         //
     }
@@ -64,10 +65,10 @@ class FigureController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Figure  $figure
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Figure $figure)
+    public function update(Request $request, Group $group)
     {
         //
     }
@@ -75,10 +76,10 @@ class FigureController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Figure  $figure
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Figure $figure)
+    public function destroy(Group $group)
     {
         //
     }
