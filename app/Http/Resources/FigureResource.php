@@ -31,6 +31,8 @@ class FigureResource extends JsonResource
                 'glb_download' => $this->glb_download,
                 'type' => $this->type
             ],
+            'created_at' => $this->created_at,
+            'update_at' => $this->updated_at
         ];
     }
 }

@@ -24,7 +24,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('figures/{id}', $prefix . 'FigureController@show');
     Route::post('figures', $prefix . 'FigureController@store');
     Route::put('figures/{id}', $prefix . 'FigureController@update');
-    Route::delete('figures/{id}', $prefix . 'FigureController@@destroy');
+    Route::delete('figures/{id}', $prefix . 'FigureController@destroy');
 
 
     //Ejemplo de ruta para la versión 1

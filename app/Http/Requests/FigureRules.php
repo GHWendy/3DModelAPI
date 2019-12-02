@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use App\Exceptions\ErrorHandler;
 
 class FigureRules extends FormRequest
 {
@@ -46,7 +47,7 @@ class FigureRules extends FormRequest
      */
     public function messages(){
         return [
-            'data.attributes.name.required' => 'The 3D model name is neccesary',
+            'data.attributes.name.required' => 'The 3D model name is necessary',
             'data.attributes.image_preview.url' => 'The image preview should be an URL',
             'data.attributes.description.max' => 'The 3D model description should be less than or equal to 300 characters',
             'data.attributes.dimensions.x.required' => 'The "x" dimension of the 3D model is necessary',
@@ -71,19 +72,9 @@ class FigureRules extends FormRequest
      * @return \Illuminate\Http\Exceptions\HttpResponseException
      */
     protected function failedValidation(Validator $validator){
-        $response = ['errors' => []];
-        $arrayTemp = [];
-        foreach($validator->errors()->toArray() as $key => $value){
-            //Form the array with a specific representacion
-            $arrayTemp = [
-                'code' => 'Error-6',
-                'source' => $key,
-                'title' => 'Unprocessable Entity',
-                'detail' => $value[0],
-            ];
-            array_push($response['errors'], $arrayTemp);
-        }
-        throw new HttpResponseException(response()->json($response,422));
+        /*$errHand = new ErrorHandler();
+        $errHand->unprocessableEntity($validator);*/
+        (new ErrorHandler())->unprocessableEntity($validator);
     }
 
     public function attributes(){
