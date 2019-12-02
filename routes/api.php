@@ -17,10 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('users', 'UserController@index');
-Route::get('users/{id}', 'UserController@show');
-Route::post('users', 'UserController@store');
-Route::put('users/{id}', 'UserController@update');
-Route::delete('users/{id}', 'UserController@destroy');
-Route::get('users/{user_id}/figures', 'UserController@showFigures');
-Route::get('users/{user_id}/groups', 'UserController@showGroups');
+Route::group(['prefix' => 'v1'], function () {
+    //Ejemplo de ruta para la versión 1
+    Route::get('users', 'Api\\v1\\UserController@index');
+});
+// Route::get('/users', function (Request $request){
+//     return '';
+// });
+
+
