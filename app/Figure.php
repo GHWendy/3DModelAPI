@@ -8,7 +8,7 @@ class Figure extends Model
 {
     //
     protected $fillable = [
-        //'user_id' no creo porque no les es permitido modificarlo
+        'user_id', 
         'name',
         'image_preview',
         'description',

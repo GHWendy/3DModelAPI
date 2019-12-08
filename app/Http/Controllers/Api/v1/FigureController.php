@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Figure;
 use App\Http\Requests\FigureRules;
@@ -12,6 +13,10 @@ use App\Exceptions\ErrorHandler;
 
 class FigureController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +28,15 @@ class FigureController extends Controller
         //para los usuarios no logueados solo de tipo publico (all(where id ...))
         $rows = Figure::count();
         if( $rows>0 ) {
-            $figures = Figure::all();
+            $limit = request()->has('limit') ? request('limit') : 10;
+            //$figures = Figure::all();
+            //return response()->json(new FigureCollection($figures), 200);
+            if(request()->has('difficulty')){
+                $figures = Figure::where('difficulty',request('difficulty'))->paginate($limit);
+            }
+            else{
+                $figures = Figure::paginate($limit);
+            }
             return response()->json(new FigureCollection($figures), 200);
         }
         return response()->json([],200);
@@ -47,7 +60,19 @@ class FigureController extends Controller
      */
     public function store(FigureRules $request)
     {
-        return "Se validaron todos los atributos solo falta ver como asociar un usuario con una figura......";
+        $prefix = 'data.attributes.';
+        $figure_data['user_id'] = Auth::id();
+        $figure_data['name'] = $request->input($prefix.'name');
+        $figure_data['image_preview'] = $request->input($prefix.'image_preview');
+        $figure_data['description'] = $request->input($prefix.'description');
+        $figure_data['x'] = $request->input($prefix.'dimensions.x');
+        $figure_data['y'] = $request->input($prefix.'dimensions.y');
+        $figure_data['z'] = $request->input($prefix.'dimensions.z');
+        $figure_data['difficulty'] = $request->input($prefix.'difficulty');
+        $figure_data['glb_download'] = $request->input($prefix.'glb_download');
+        $figure_data['type'] = $request->input($prefix.'type');
+        $figure = Figure::create($figure_data);
+        return (new FigureResource($figure))->response()->setStatusCode(201);
     }
 
     /**
