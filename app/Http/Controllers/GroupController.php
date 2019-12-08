@@ -7,26 +7,7 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -39,14 +20,15 @@ class GroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified group.
      *
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function show(Group $group)
     {
-        //
+        $groupResource= new groupResource($group);
+         return response()->json($groupResource,200);
     }
 
     /**
@@ -57,7 +39,12 @@ class GroupController extends Controller
      */
     public function showMembers(Group $group)
     {
-        //
+        $dataMembers = [
+            'attributes' =>[
+                'members' => $this->members
+            ]
+        ];
+        return response()->json($dataMembers,200);
     }
 
     /**
