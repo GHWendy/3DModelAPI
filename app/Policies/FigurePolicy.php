@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Figure;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class FigurePolicy
 {
@@ -28,9 +29,18 @@ class FigurePolicy
      * @param  \App\Figure  $figure
      * @return mixed
      */
-    public function view(User $user, Figure $figure)
+    public function view(?User $user, Figure $figure)
     {
-        return $user->id == $figure->user_id;
+        if( $figure->type == 'private' ){
+            if( $user ){
+                if( $user->id != $figure->user_id ){
+                    return Response::deny('You can not see this figure');
+                }
+            } else {
+               return Response::deny('You can not see this figure');
+            }
+        }
+        return Response::allow();
     }
 
     /**
@@ -53,7 +63,8 @@ class FigurePolicy
      */
     public function update(User $user, Figure $figure)
     {
-        return $user->id == $figure->user_id;
+        $message = 'You can not edit it. You do not own this figure: '.$figure->name;
+        return $user->id == $figure->user_id ? Response::allow() : Response::deny($message);
     }
 
     /**
@@ -65,30 +76,8 @@ class FigurePolicy
      */
     public function delete(User $user, Figure $figure)
     {
-        //
+        $message = 'You can not delete it. You do not own this figure: '.$figure->name;
+        return $user->id == $figure->user_id ? Response::allow() : Response::deny($message);
     }
 
-    /**
-     * Determine whether the user can restore the figure.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Figure  $figure
-     * @return mixed
-     */
-    public function restore(User $user, Figure $figure)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the figure.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Figure  $figure
-     * @return mixed
-     */
-    public function forceDelete(User $user, Figure $figure)
-    {
-        //
-    }
 }

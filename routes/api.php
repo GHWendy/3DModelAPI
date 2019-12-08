@@ -22,15 +22,19 @@ Route::group(['prefix' => 'v1'], function () {
     //Endpoints for Figure model
     Route::get('figures', $prefix . 'FigureController@index');
     Route::get('figures/{id}', $prefix . 'FigureController@show');
-    Route::middleware('auth:api')->post('figures', $prefix . 'FigureController@store');
+    Route::post('figures', $prefix . 'FigureController@store');
     Route::put('figures/{id}', $prefix . 'FigureController@update');
     Route::delete('figures/{id}', $prefix . 'FigureController@destroy');
 
+
+    //También se pueden proteger los guards así 
+    //Route::middleware('auth:api')->post('figures', $prefix . 'FigureController@store');
 
     //Ejemplo de ruta para la versión 1
     Route::get('users', $prefix . 'UserController@create');
 });
 
+Route::post('login', 'Auth\\LoginController@authenticate');
 //Route::post('login', 'LoginController');
 // Route::get('/users', function (Request $request){
 //     return '';

@@ -7,6 +7,7 @@ use Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -50,14 +51,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-
+        
         if ($exception instanceof AutorizationExeption) {
-            return Response::json('sin permiso', JsonResponse::HTTP_FORBIDDEN);
+            return Response::json(['sin permiso', $exception], JsonResponse::HTTP_FORBIDDEN);
         }
 
         if ($exception instanceof AuthenticationException) {
-            return Response::json('Necesita un token de autenticacion', JsonResponse::HTTP_UNAUTHORIZED);
+            return Response::json(['Necesita un token de autenticacion',(array) $exception], JsonResponse::HTTP_UNAUTHORIZED);
         }
+
+        return Response::json([(array) $exception], JsonResponse::HTTP_UNAUTHORIZED);
         
         return parent::render($request, $exception);
     }

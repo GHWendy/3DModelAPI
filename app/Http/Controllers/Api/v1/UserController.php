@@ -30,11 +30,11 @@ class UserController extends Controller
     public function create()
     {
         return User::forceCreate([
-            'name' => 'El Beto',
+            'name' => 'El Beto 2',
             'profile_picture' => 'www.google.com',
             'age' => 21,
             'gender' => 'male',
-            'email' => 'hpech1@gmail.com',
+            'email' => 'hpech2@gmail.com',
             'email_verified_at' => '2019-12-07 22:43:01',
             'password' => Hash::make('12345678'),
             'api_token' => Str::random(80),
