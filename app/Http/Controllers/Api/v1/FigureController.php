@@ -26,38 +26,27 @@ class FigureController extends Controller
      */
     public function index()
     {
-        //$this->middleware('auth:api');
-        //return response()->json([auth('api')->user()],200);
-        //Falta: validar si el usuario está logueado mostrar aquellos públicos, y sus privados e incluso aquellos que tenga en otros grupos (esto último talvez no)
-        //para los usuarios no logueados solo de tipo publico (all(where id ...))
+        //Faltaria: mostrar aquellos que tenga en otros grupos (esto último talvez no)
         $rows = Figure::count();
         if( $rows>0 ) {
-            $conditions[] = array('type','=','public');
-
+            $type = 'public'; //por default se mostrarán todos los modelos públicos
+            $limit = request()->has('limit') ? (int) request('limit') : 10;
+            $difficulty = request('difficulty');
             $user = auth('api')->user();
+            $user_id = null;
             if( $user ){
-                $conditions[] = array('user_id', '=', $user->id);
+                $user_id = $user->id;
             }
-
-            //return response()->json($conditions, 200);
-
-            $limit = request()->has('limit') ? request('limit') : 10;
-            //$figures = Figure::all();
-            //return response()->json(new FigureCollection($figures), 200);
-            if(request()->has('difficulty')){
-                $figures = Figure::where('difficulty',request('difficulty'))->orWhere($conditions)->paginate($limit);
-            }
-            else{
-                $figures = Figure::where('')->orwhere([
-                    [
-                        'type', 'public'
-                    ],
-                    [
-                        'user_id', 3
-                    ]
-                ])->paginate($limit);
-            }
-            return response()->json(new FigureCollection($figures), 200);
+            $figures = Figure::when($difficulty, function ($query, $difficulty) {
+                    return $query->where('difficulty', $difficulty);
+                })
+                ->where(function ($query) use($type, $user_id) {
+                    $query->where('type', $type)
+                    ->when($user_id, function($query, $user_id) {
+                        return $query->orWhere('user_id', $user_id);
+                    });
+                })->paginate($limit);
+            return response()->json(new FigureCollection($figures), 200);    
         }
         return response()->json([],200);
     }
@@ -96,12 +85,15 @@ class FigureController extends Controller
         $figure = Figure::find($id);
         if( $figure ) {
             $this->authorize('view',$figure);
-            $response = Gate::inspect('view', $figure);
-            if($response->allowed()){
+            return new FigureResource($figure);
+
+            //Before
+            //$response = Gate::inspect('view', $figure);
+            /*if($response->allowed()){
                 return new FigureResource($figure);
             }else{
                 (new ErrorHandler())->forbidden($response->message());
-            }
+            }*/
         }
         (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }
@@ -117,22 +109,19 @@ class FigureController extends Controller
     {
         $figure = Figure::find($id);
         if( $figure ) {
-            $response = Gate::inspect('update', $figure);
-            if($response->allowed()){
-                $figure->name = $request->input('data.attributes.name');
-                $figure->image_preview = $request->input('data.attributes.image_preview');
-                $figure->description = $request->input('data.attributes.description');
-                $figure->x = $request->input('data.attributes.dimensions.x');
-                $figure->y = $request->input('data.attributes.dimensions.y');
-                $figure->z = $request->input('data.attributes.dimensions.z');
-                $figure->difficulty = $request->input('data.attributes.difficulty');
-                $figure->glb_download = $request->input('data.attributes.glb_download');
-                $figure->type = $request->input('data.attributes.type');
-                $figure->save();
-                return new FigureResource($figure);
-            }else{
-                (new ErrorHandler())->forbidden($response->message());
-            }   
+            $this->authorize('update',$figure);
+            
+            $figure->name = $request->input('data.attributes.name');
+            $figure->image_preview = $request->input('data.attributes.image_preview');
+            $figure->description = $request->input('data.attributes.description');
+            $figure->x = $request->input('data.attributes.dimensions.x');
+            $figure->y = $request->input('data.attributes.dimensions.y');
+            $figure->z = $request->input('data.attributes.dimensions.z');
+            $figure->difficulty = $request->input('data.attributes.difficulty');
+            $figure->glb_download = $request->input('data.attributes.glb_download');
+            $figure->type = $request->input('data.attributes.type');
+            $figure->save();
+            return new FigureResource($figure); 
         }
         (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }
@@ -147,13 +136,10 @@ class FigureController extends Controller
     {
         $figure = Figure::find($id);
         if($figure){
-            $response = Gate::inspect('delete', $figure);
-            if($response->allowed()){
-                $figure->delete();
-                return response()->json('',204);
-            }else{
-                (new ErrorHandler())->forbidden($response->message());
-            }
+            $this->authorize('delete',$figure);
+
+            $figure->delete();
+            return response()->json('',204);
         }
         (new ErrorHandler())->notFound('There is not a figure with the id: ' . $id);
     }

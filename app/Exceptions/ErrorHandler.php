@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ErrorHandler
 {
@@ -22,30 +25,15 @@ class ErrorHandler
     }
 
     public function unauthorized($message) {
-        $response = ['errors' => [
-            'code' => 'ERROR-2',
-            'title' => 'Unauthorized',
-            'detail' => $message
-        ]];
-        throw new HttpResponseException(response()->json($response,401));
+        throw new AuthenticationException($message);
     }
 
     public function forbidden($message) {
-        $response = ['errors' => [
-            'code' => 'ERROR-3',
-            'title' => 'Forbidden',
-            'detail' => $message
-        ]];
-        throw new HttpResponseException(response()->json($response,403));
+        throw new AuthorizationException($message);
     }
 
     public function notFound($message) {
-        $response = ['errors' => [
-            'code' => 'ERROR-4',
-            'title' => 'Not Found',
-            'detail' => $message
-        ]];
-        throw new HttpResponseException(response()->json($response,404));
+        throw new NotFoundHttpException($message);
     }
 
     public function teapot_Chan() {
@@ -54,7 +42,7 @@ class ErrorHandler
             'title' => 'We are teapots',
             'detail' => 'Pongáme 100 profe'
         ]];
-        throw new HttpResponseException(response()->json($response,404));
+        throw new HttpResponseException(response()->json($response,418));
     }
 
     public function unprocessableEntity(Validator $validator) {

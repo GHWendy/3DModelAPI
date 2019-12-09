@@ -32,6 +32,7 @@ class FigurePolicy
     public function view(?User $user, Figure $figure)
     {
         if( $figure->type == 'private' ){
+            $user = auth('api')->user();
             if( $user ){
                 if( $user->id != $figure->user_id ){
                     return Response::deny('You can not see this figure');
