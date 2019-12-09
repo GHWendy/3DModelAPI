@@ -1,7 +1,6 @@
 <?php
-
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Api\v1;
+use App\Http\Controllers\Controller;
 use App\Group;
 use Illuminate\Http\Request;
 
@@ -9,14 +8,15 @@ class GroupController extends Controller
 {
     
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created group in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $requests
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GroupRequest $request)
     {
-        //
+        $group = Group::create($reques->data['attributes']);
+        return response()->json(new ProductResource($product) ,201);
     }
 
     /**

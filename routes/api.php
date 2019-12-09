@@ -35,9 +35,9 @@ Route::group(['prefix' => 'v1'], function () {
 	//Delete a group
 	Route::delete('groups/{id}' , $prefix .  "GroupController@destroy");
 	//Delete a member of a group
-	Route::delete('groups/{id}/members/{id}' , $prefix .  "GroupController@removeMember");
+	Route::delete('groups/{group_id}/members/{id}' , $prefix .  "GroupController@removeMember");
 	//Delete a figure of a group
-	Route::delete('groups/{id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
+	Route::delete('groups/{group_id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
 
 });
 
