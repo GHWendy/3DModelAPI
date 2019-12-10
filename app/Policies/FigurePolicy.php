@@ -35,10 +35,10 @@ class FigurePolicy
             $user = auth('api')->user();
             if( $user ){
                 if( $user->id != $figure->user_id ){
-                    return Response::deny('You can not see this figure');
+                    return Response::deny('You do not have access to this figure');
                 }
             } else {
-               return Response::deny('You can not see this figure');
+               return Response::deny('You do not have access to this figure');
             }
         }
         return Response::allow();
@@ -77,7 +77,7 @@ class FigurePolicy
      */
     public function delete(User $user, Figure $figure)
     {
-        $message = 'You can not delete it. You do not own this figure: '.$figure->name;
+        $message = 'You can not delete it. You do not own this resource';
         return $user->id == $figure->user_id ? Response::allow() : Response::deny($message);
     }
 

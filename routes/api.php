@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     $prefix = 'Api\\v1\\';
+
     //Endpoints for Figure model
     Route::get('figures', $prefix . 'FigureController@index');
     Route::get('figures/{id}', $prefix . 'FigureController@show');
@@ -26,7 +27,12 @@ Route::group(['prefix' => 'v1'], function () {
     Route::put('figures/{id}', $prefix . 'FigureController@update');
     Route::delete('figures/{id}', $prefix . 'FigureController@destroy');
 
+    //Endpoints for Comment model
+    Route::get('figures/{figure_id}/comments', $prefix . 'CommentController@showAllFigureComments');
+    Route::post('figures/{figure_id}/comments', $prefix . 'CommentController@store');
+    Route::delete('figures/{figure_id}/comments/{id}', $prefix . 'CommentController@destroy');
 
+    
     //También se pueden proteger los guards así 
     //Route::middleware('auth:api')->post('figures', $prefix . 'FigureController@store');
 

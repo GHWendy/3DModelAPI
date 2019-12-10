@@ -26,6 +26,7 @@ class FigureResource extends JsonResource
                     'y' => $this->y,
                     'z' => $this->z
                 ],
+                'comments' => CommentResource::collection($this->comments)->pluck('id'),
                 //'tags' => [1,2,3], //Not yet implemented and maybe we are not going to do it
                 'difficulty' => $this->difficulty,
                 'glb_download' => $this->glb_download,

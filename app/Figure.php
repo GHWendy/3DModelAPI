@@ -19,4 +19,13 @@ class Figure extends Model
         'glb_download',
         'type'
     ];
+
+    /**
+     * Get the comments fot the figure
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+        //return $this->belongsToMany('App\User', 'comments')->withPivot('id', 'title', 'description')->as('comment')->withTimestamps();
+    }
 }

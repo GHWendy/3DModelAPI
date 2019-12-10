@@ -72,8 +72,6 @@ class FigureRules extends FormRequest
      * @return \Illuminate\Http\Exceptions\HttpResponseException
      */
     protected function failedValidation(Validator $validator){
-        /*$errHand = new ErrorHandler();
-        $errHand->unprocessableEntity($validator);*/
         (new ErrorHandler())->unprocessableEntity($validator);
     }
 

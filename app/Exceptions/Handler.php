@@ -10,6 +10,7 @@ use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\QueryException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -84,7 +85,14 @@ class Handler extends ExceptionHandler
                 ]
             ];
             return response()->json($response, 404);
-        }
+        }/*else if($exception instanceof QueryException) {
+            $response = ['errors' => [
+                'code' => 'ERROR-1',
+                'title' => 'Bad request',
+                'detail' => "There was an error in your request"
+            ]];
+            return response()->json($response, 400);
+        }*/
         /*else {
             $response = ['errors' => 
                 [
