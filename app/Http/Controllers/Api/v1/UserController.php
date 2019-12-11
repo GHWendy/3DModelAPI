@@ -1,8 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -13,7 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        //listar
+        //return response()->json(200);
+        return "Estás en la version 1 de esta API, FELICIDADES :D";
     }
 
     /**
@@ -23,7 +29,17 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return User::forceCreate([
+            'name' => 'El Beto 2',
+            'profile_picture' => 'www.google.com',
+            'age' => 21,
+            'gender' => 'male',
+            'email' => 'hpech2@gmail.com',
+            'email_verified_at' => '2019-12-07 22:43:01',
+            'password' => Hash::make('12345678'),
+            'api_token' => Str::random(80),
+            'remember_token' => '2019-12-07 22:43:01'
+        ]);
     }
 
     /**
@@ -34,7 +50,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Crear usuario
+        return response()->json(200);
     }
 
     /**
@@ -45,7 +62,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        //mostrar un usuario
+        return response()->json(200);
     }
 
     /**
@@ -68,7 +86,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //Actualizar
+        return response()->json(200);
     }
 
     /**
@@ -79,6 +98,17 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Eliminar
+        return response()->json(200);
+    }
+
+    public function showFigures()
+    {
+        return response()->json(200);
+    }
+
+    public function showGroups()
+    {
+        return response()->json(200);
     }
 }

@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     $prefix = 'Api\\v1\\';
+
     //Endpoints for Groups
 	//Get a group
 	Route::get('groups/{id}', $prefix ."GroupController@show");
@@ -39,13 +40,29 @@ Route::group(['prefix' => 'v1'], function () {
 	//Delete a figure of a group
 	Route::delete('groups/{group_id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
 
+    //Endpoints for Figure model
+    Route::get('figures', $prefix . 'FigureController@index');
+    Route::get('figures/{id}', $prefix . 'FigureController@show');
+    Route::post('figures', $prefix . 'FigureController@store');
+    Route::put('figures/{id}', $prefix . 'FigureController@update');
+    Route::delete('figures/{id}', $prefix . 'FigureController@destroy');
+
+    //Endpoints for Comment model
+    Route::get('figures/{figure_id}/comments', $prefix . 'CommentController@showAllFigureComments');
+    Route::post('figures/{figure_id}/comments', $prefix . 'CommentController@store');
+    Route::delete('figures/{figure_id}/comments/{id}', $prefix . 'CommentController@destroy');
+
+    
+    //También se pueden proteger los guards así 
+    //Route::middleware('auth:api')->post('figures', $prefix . 'FigureController@store');
+
+    //Ejemplo de ruta para la versión 1
+    Route::get('users', $prefix . 'UserController@create');
 });
 
-
-
-
-
-
-
-
+Route::post('login', 'Auth\\LoginController@authenticate');
+//Route::post('login', 'LoginController');
+// Route::get('/users', function (Request $request){
+//     return '';
+// });
 
