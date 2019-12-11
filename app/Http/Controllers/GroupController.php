@@ -15,7 +15,8 @@ class GroupController extends Controller
      */
     public function store(GroupRequest $request)
     {
-        $group = Group::create($reques->data['attributes']);
+        $group = Group::create($request->data['attributes']);
+
         return response()->json(new ProductResource($product) ,201);
     }
 
