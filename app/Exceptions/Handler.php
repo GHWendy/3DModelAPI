@@ -107,7 +107,7 @@ class Handler extends ExceptionHandler
         
 
         //return Response::json([(array) $exception], JsonResponse::HTTP_UNAUTHORIZED);
-        return response()->json([get_class($exception)], 500);
+        //return response()->json([get_class($exception)], 500);
         return parent::render($request, $exception);
     }
 }

@@ -85,6 +85,7 @@ class FigureController extends Controller
     {
         $figure = Figure::find($id);
         if( $figure ) {
+            //return response()->json($figure->usersGroup, 200);
             $this->authorize('view',$figure);
             return new FigureResource($figure);
 
