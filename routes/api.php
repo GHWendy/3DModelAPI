@@ -39,6 +39,11 @@ Route::group(['prefix' => 'v1'], function () {
     Route::delete('figures/{figure_id}/comments/{comment_id}', $prefix . 'CommentController@destroy');
 
 });
+
+Route::post('login', 'Auth\\LoginController@authenticate');
+//Route::post('login', 'LoginController');
 // Route::get('/users', function (Request $request){
 //     return '';
 // });
+
+
