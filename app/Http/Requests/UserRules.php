@@ -27,7 +27,7 @@ class UserRules extends FormRequest
     {
         return [
             'data.attributes.name' => 'required|max:255',
-            'data.attributes.email' => 'required|email|max:255',
+            'data.attributes.email' => 'required|email|max:255|unique:users,email',
             'data.attributes.password' => 'required|max:255',
         ];
     }
@@ -43,6 +43,7 @@ class UserRules extends FormRequest
             'data.attributes.name.required' => 'The user name is necessary',
             'data.attributes.name.max' => 'The user name must be less or equal than 255 characters',
             'data.attributes.email.email' => 'Email format is not correct',
+            'data.attributes.email.unique' => 'Email must be unique',
             'data.attributes.email.required' => 'The user email is necessary',
             'data.attributes.email.max' => 'The user email must be less or equal than 255 characters',
             'data.attributes.password.required' => 'The user password is necessary',

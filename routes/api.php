@@ -19,13 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Route::get('users', 'UserController@index');
 
-Route::get('users/{id}', 'UserController@show');
-Route::post('users', 'UserController@store');
-Route::put('users/{id}', 'UserController@update');
-Route::delete('users/{id}', 'UserController@destroy');
-Route::get('users/{user_id}/figures', 'UserController@showFigures');
-Route::get('users/{user_id}/groups', 'UserController@showGroups');
-Route::group(['prefix' => 'v1'], function () {
+// Route::get('users/{id}', 'UserController@show');
+// Route::post('users', 'UserController@store');
+// Route::put('users/{id}', 'UserController@update');
+// Route::delete('users/{id}', 'UserController@destroy');
+// Route::get('users/{user_id}/figures', 'UserController@showFigures');
+// Route::get('users/{user_id}/groups', 'UserController@showGroups');
+
+Route::group(['prefix' => 'v1','middleware' => 'auth:api'], function () {
     $prefix = "Api\\v1\\";
     //Ejemplo de ruta para la versión 1
     Route::get('users', $prefix . 'UserController@index');
