@@ -1,16 +1,22 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 
-use App\Group;
-use App\User;
+
+
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Figure;
+use App\User;
+use App\Group;
+use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
-use App\Http\Request\GroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Exceptions\ErrorHandler;
-use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -25,11 +31,11 @@ class GroupController extends Controller
      * @param  \Illuminate\Http\Request  $requests
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GroupRequest $request)
     {
         $group_data['name'] = $request ->data['attributes']['name'];
         $group_data['description'] = $request ->data['attributes']['description'];
-        $group_data['creator_id'] = Auth::id();       
+        $group_data['creator_id'] = Auth::id();    
         $group = Group::create($group_data);
         $usersRequest= $request->data['attributes']['members'];
         array_push($usersRequest, Auth::id());
@@ -46,11 +52,11 @@ class GroupController extends Controller
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(GroupRequest $request)
     {   
         $group = Group::find($request->id);
         if($group){
-            $this-> authorize('view',$group);
+           $this-> authorize('view',$group);
             $groupResource= new groupResource($group);
          return response()->json($groupResource,201);
         } else {
@@ -64,11 +70,11 @@ class GroupController extends Controller
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response with members id or empty array []
      */
-    public function showMembers(Request $request)
+    public function showMembers(GroupRequest $request)
     {
         $group = Group::find($request->id);
         if ($group) {
-            $this-> authorize('view',$group);
+            $this-> authorize('view',$group); 
             $users = $group -> users() -> pluck('id');
                     $dataMembers = [
                         'attributes' =>[
@@ -89,7 +95,7 @@ class GroupController extends Controller
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GroupRequest $request, $id)
     {
         $group = Group::find($id);
         if ($group) {
@@ -111,21 +117,18 @@ class GroupController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function updateMembers(Request $request, $id)
+    public function updateMembers(GroupRequest $request, $id)
     {
-        //AUTH: Solo la persona que creó el grupo puede hacer esto 
-        //Verificar que el id de las personas no estén repetidos y si están, no hacer nada, o marcar error? si se marca
-        //error, va en el GroupRequest, sino, aqui 
-        #SE implementa el "Aqui va "
-        //Revisar.
         $group = Group::find($id);
         if ($group) { 
-            $this-> authorize('addUsers',$group);
+
+            $this-> authorize('addUser',$group);
             $usersRequest= $request->data['attributes']['members']; 
             $usersInGroup = $group -> users() -> pluck('id')->toArray();
             $newUsers= array_diff($usersRequest, $usersInGroup);
             $this -> addUsers($group, $newUsers);
-            return response()->json(new groupResource($group) ,201);
+        
+           return response()->json(new groupResource($group) ,201);
         } else {
             (new ErrorHandler())->notFound('There is not a group with the id: ' . $request->id);   
         }
@@ -140,13 +143,10 @@ class GroupController extends Controller
      */
     public function updateFigures(Request $request, $id)
     {
-        //AUTH:  las figuras sonde la persona?
         $group = Group::find($id);
         if ($group) {
-            $this-> authorize('addFigures',$group);
-            //Verificar que el id de la figura no esté repetido en las tablas pivote figure_groups.Se puede hacer en el Request
-
-            $figuresRequest= $request->data['attributes']['figures'];
+            $this-> authorize('addFigure',$group);
+             $figuresRequest= $request->data['attributes']['figures'];
             $figuresInGroup = $group -> figures() -> pluck('id')->toArray();
             $newFigures= array_values(array_diff($figuresRequest, $figuresInGroup));
             $this -> addFigures($group,$newFigures); 
@@ -164,15 +164,14 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        //AUTH: Only the creator can delete the group.
         $group = Group::find($id);
         if ($group) {
+             $this-> authorize('delete',$group);
             $usersInGroup = $group -> users() -> pluck('id')->toArray();
             $figuresInGroup = $group -> figures() -> pluck('id')->toArray();
             $this -> deleteFigures($group,$figuresInGroup);
             $this -> deleteUsers($group,$usersInGroup);
             $group-> delete();
-
             return response()->json([] ,204);
         } else {
             (new ErrorHandler())->notFound('There is not a group with the id: ' . $request->id);   
@@ -187,20 +186,18 @@ class GroupController extends Controller
      */
     public function removeMember( $groupId, $id)
     {
-        //AUTH: Only the creator can delete a member.
-        $group = Group::find($id);
+        $group = Group::find($groupId);
         if ($group) {
-            $usersInGroup = $group -> users() -> pluck('id')->toArray();
-            //Get figuras del grupo que sean de ese member
-            //Eliminar figuras
-            //Si solo queda un user, eliminar user + grupo.
-            $this -> deleteFigures($group,$figuresInGroup);
-            $this -> deleteUsers($group,$usersInGroup);
-            $group-> delete();
+             $this-> authorize('deleteUser',$group);
+            $figuresInGroup = $group -> figures() -> pluck('id')->toArray();
+
+            // Get figuras del grupo que sean de ese member
+            // //Eliminar figuras
+            $group->users()->detach($id);
 
             return response()->json([] ,204);
         } else {
-            (new ErrorHandler())->notFound('There is not a group with the id: ' .$request->id);   
+            (new ErrorHandler())->notFound('There is not a group with the id: ' .$groupId);   
         }
     }
 
@@ -217,17 +214,14 @@ class GroupController extends Controller
             $figure = Figure::find($figureId);
             if($figure){
                $this-> authorize('deleteFigure',[$group,$figure]);
-                //$userId= Auth::id()
-                //$usersInGroup = $group -> users() -> pluck('id')->toArray();
-                //Get figuras del grupo que sean de ese member
-               $this -> deleteFigures($group,$figuresId);
+                $group->figures()->detach($figureId);
                return response()->json([] ,204);
 
             } else {
                 (new ErrorHandler())->notFound('There is not a figure with the id: ' . $figureId); 
             }
         } else {
-            (new ErrorHandler())->notFound('There is not a group with the id: ' . $request->id);   
+            (new ErrorHandler())->notFound('There is not a group with the id: ' . $groupId);   
         }
     }
 

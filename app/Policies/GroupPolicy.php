@@ -22,11 +22,12 @@ class GroupPolicy
      */
     public function view(User $user, Group $group)
     {
-       $message = 'Access denied. You are not part of this group.' ;
-        if ($group['attributes']['members']){
-            return in_array($user->id, $group['attributes']['members']) ? Response::allow() : Response::deny($message);
-        }       
-        return Response::deny($message); 
+        //TODO:Refactor
+       $message = 'Access denied. You are not part of this group.:(' ;
+        if ($group['users']){
+           return in_array($user->id, $group['users']-> pluck('id')->toArray()) ? Response::allow() : Response::deny($message);
+        } 
+        return Response::deny($message);       
     }
 
 
@@ -51,10 +52,10 @@ class GroupPolicy
     public function update(User $user, Group $group)
     {
         $message = 'No permissons to edit. You are not part of this group.' ;
-        if ($group['attributes']['members']){
-            return in_array($user->id, $group['attributes']['members']) ? Response::allow() : Response::deny($message);
-        }       
-        return Response::deny($message);  
+        if ($group['users']){
+           return in_array($user->id, $group['users']-> pluck('id')->toArray()) ? Response::allow() : Response::deny($message);
+        } 
+        return Response::deny($message);    
     }
 
     /**
@@ -67,7 +68,7 @@ class GroupPolicy
     public function addUser(User $user, Group $group)
     {
         $message = 'You can not add users.You are not a creator';
-        return $user->id == $gropup->creator_id ? Response::allow() : Response::deny($message);
+        return $user->id == $group->creator_id ? Response::allow() : Response::deny($message);
     }
 
     /**
@@ -80,10 +81,10 @@ class GroupPolicy
     public function addFigure(User $user, Group $group)
     {
         $message = 'No permissons to add. You are not part of this group.' ;
-        if ($group['attributes']['members']){
-            return in_array($user->id, $group['attributes']['members']) ? Response::allow() : Response::deny($message);
-        }       
-        return Response::deny($message);
+        if ($group['users']){
+           return in_array($user->id, $group['users']-> pluck('id')->toArray()) ? Response::allow() : Response::deny($message);
+        } 
+        return Response::deny($message);  
     }
 
     /**
@@ -95,7 +96,8 @@ class GroupPolicy
      */
     public function delete(User $user, Group $group)
     {
-        //
+        $message = 'You can not delete group.You are not a creator';
+        return $user->id == $group->creator_id ? Response::allow() : Response::deny($message);
     }
 
     /**
@@ -107,13 +109,14 @@ class GroupPolicy
      */
     public function deleteUser(User $user, Group $group)
     {
-        //
+        $message = 'You can not delete user.You are not a creator';
+        return $user->id == $group->creator_id ? Response::allow() : Response::deny($message);
     }
 
     /**
      * Determine whether the user can delere a figure of the group.
      *
-     * @param  \App\User  $user+
+     * @param  \App\User  $user
      * @return mixed
      */
     public function deleteFigure(User $user, Group $group,Figure $figure)

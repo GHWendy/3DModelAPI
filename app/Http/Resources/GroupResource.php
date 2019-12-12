@@ -17,8 +17,7 @@ class GroupResource extends JsonResource
          $attributes = [
             'name' => $this->name,
             'description' => $this->description,
-            'members'=> [1,2,3],
-            //'members' => UserResource::collection($this->users)->pluck('id'),
+            'members' => User::collection($this->users)->pluck('id'),
             'figures' => FigureResource::collection($this->figures)->pluck('id'),
         ];
         $data = [

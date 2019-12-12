@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,10 +8,9 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 use App\Exceptions\ErrorHandler;
 
-
 class GroupRequest extends FormRequest
 {
-    /**
+     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -29,14 +27,6 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-        $figuresRequest= $request->data['attributes']['figures']
-
-        $rules = ['data.attributes.*.members' => Rule::unique('users_groups')->where(function ($query) use ($request) {
-                                                    return $query ->where('user_id',$value) ->where('group_id',$id);}),
-
-                'data.attributes.*.figures' => Rule::unique('figures_groups')->where(function ($query) use ($request) {
-                                                    return $query ->where('figure_id',$value) ->where('group_id',$id);})
-                ];
 
         switch ($this-> method()) {
             case 'POST':
