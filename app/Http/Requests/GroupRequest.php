@@ -1,8 +1,14 @@
 <?php
 
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use App\Exceptions\ErrorHandler;
+
 
 class GroupRequest extends FormRequest
 {
@@ -23,11 +29,28 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-         $rules = [
-            'data.attributes.name' => 'bail|required',
-            'data.attributes.description' => 'bail|required|max:300'
-            //TODO: Add members and figures 
-         ];
+        $rules = [];
+
+        switch ($this-> method()) {
+            case 'POST':
+
+            $rules = [
+                'data.attributes.name' => 'bail|required',
+                'data.attributes.description' => 'bail|max:300',
+                'data.attributes.*.members' => 'exists: users, id',
+                'data.atributes.*.figures' => 'exists: figures,id',
+                
+            ];
+                break;   
+            case 'PUT': 
+                $rules = [
+                //TODO:validate the put things , validate que no se repita el id de una figura o de un modelo
+               ];
+                break;         
+            default:
+                break;
+        }
+
         return $rules;
     }
 
@@ -37,24 +60,13 @@ class GroupRequest extends FormRequest
             'data.attributes.name' => 'The group :attribute is necessary',
             'data.attributes.description.required' => 'A description is necessary',            
             'data.attributes.description.max' => 'The :attribute must be max :max words',
-            //TODO: Add members and figures 
+            'data.attributes.*.members.exist' => 'Please, enter valid user(s)',
+            'data.atributes.*.figures.exists' => 'The figure(s) does not exist(s)' ,
          ];
         return $errorMessages;
     }
 
     protected function failedValidation(Validator $validator){
-        /*$errHand = new ErrorHandler();
-        $errHand->unprocessableEntity($validator);*/
         (new ErrorHandler())->unprocessableEntity($validator);
-    }
-
-    public function attributes(){
-        return [
-            'data.attributes.name' => 'name',
-            'data.attributes.description' => 'description',            
-            // 'data.attributes.members' => 'members',
-            // 'data.attributes.figures' => 'figures'
-             //TODO: Add members and figures 
-        ];
     }
 }

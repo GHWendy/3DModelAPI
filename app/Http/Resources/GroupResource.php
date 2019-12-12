@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Group extends JsonResource
+class GroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,14 +17,15 @@ class Group extends JsonResource
          $attributes = [
             'name' => $this->name,
             'description' => $this->description,
-            'members' => $this->members,
-            'figures' => $this->figures
+            'members' => $this->users,
+            //'members' => UserResource::collection($this->users)->pluck('id'),
+            'figures' => FigureResource::collection($this->figures)->pluck('id'),
         ];
         $data = [
             'group_id' => $this->id,
             'attributes' => $attributes,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
         ];
         return $data;
     }

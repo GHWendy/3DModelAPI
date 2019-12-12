@@ -76,16 +76,17 @@ class Handler extends ExceptionHandler
             ];
             return response()->json($response, 403);
             //return Response::json($response, JsonResponse::HTTP_FORBIDDEN);
-        }else if ($exception instanceof NotFoundHttpException) {
-            $response = ['errors' => 
-                [
-                    'code' => 'ERROR-4',
-                    'title' => 'Not found',
-                    'detail' => $exception->getMessage() != null ? $exception->getMessage() : 'The requested resource was not found'
-                ]
-            ];
-            return response()->json($response, 404);
-        }/*else if($exception instanceof QueryException) {
+        } //else if ($exception instanceof NotFoundHttpException) {
+        //     $response = ['errors' => 
+        //         [
+        //             'code' => 'ERROR-4',
+        //             'title' => 'Not found',
+        //             'detail' => $exception->getMessage() != null ? $exception->getMessage() : 'The requested resource was not found'
+        //         ]
+        //     ];
+        //     return response()->json($response, 404);
+         //}
+         /*else if($exception instanceof QueryException) {
             $response = ['errors' => [
                 'code' => 'ERROR-1',
                 'title' => 'Bad request',

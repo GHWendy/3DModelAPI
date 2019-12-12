@@ -21,22 +21,27 @@ Route::group(['prefix' => 'v1'], function () {
     $prefix = 'Api\\v1\\';
 
     //Endpoints for Groups
+    //Create a group
+	Route::post('groups' , $prefix .'GroupController@store');
 	//Get a group
 	Route::get('groups/{id}', $prefix ."GroupController@show");
-	//Get members
+    //Get members
 	Route::get('groups/{id}/members', $prefix . "GroupController@showMembers");
-	//Create a group
-	Route::post('groups' , $prefix . "GroupController@store");
 	//Update group
-	Route::put('groups/{id}' , $prefix .  "GroupController@edit");
+	Route::put('groups/{id}' , $prefix .  "GroupController@update");
+	
 	//Add user to group
-	Route::put('groups/{id}/members' , $prefix .  "GroupController@addMember");
+	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");
+	
 	//Add a figure to a group
-	Route::put('groups/{id}/figures' , $prefix .  "GroupController@addFigure");
+	Route::put('groups/{id}/figures' , $prefix .  "GroupController@updateFigures");
+	
 	//Delete a group
 	Route::delete('groups/{id}' , $prefix .  "GroupController@destroy");
+	
 	//Delete a member of a group
 	Route::delete('groups/{group_id}/members/{id}' , $prefix .  "GroupController@removeMember");
+	
 	//Delete a figure of a group
 	Route::delete('groups/{group_id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
 
