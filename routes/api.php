@@ -20,6 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     $prefix = 'Api\\v1\\';
 
+    //Endpoints for the User model
+    Route::get('users', $prefix . 'UserController@index');
+    Route::get('users/{id}', $prefix . 'UserController@show');
+    Route::post('users', $prefix . 'UserController@store');
+    Route::put('users/{id}', $prefix . 'UserController@update');
+    Route::delete('users/{id}', $prefix . 'UserController@destroy');
+
     //Endpoints for Figure model
     Route::get('figures', $prefix . 'FigureController@index');
     Route::get('figures/{id}', $prefix . 'FigureController@show');
