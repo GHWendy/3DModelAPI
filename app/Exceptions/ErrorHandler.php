@@ -15,7 +15,7 @@ class ErrorHandler
 
     }
 
-    public function badRequest($message) {
+    public function badRequest($message) { 
         $response = ['errors' => [
             'code' => 'ERROR-1',
             'title' => 'Bad Request',

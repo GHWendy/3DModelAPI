@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Comment;
 use App\Figure;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -42,15 +43,6 @@ class CommentController extends Controller
         return response()->json(new CommentCollection($comments),200);
 
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -60,50 +52,18 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request, $figure_id)
     {
-        $this->authorize('view',Figure::find($figure_id)); //Valida si el usuario puede comentar en la figura (el usuario debe estar logueado y que la figura sea pública o sea propietario)
-        //utilizar Gate para hacer que pase el primero y luego validar si pertenece a un grupo
+        $response = Gate::inspect('view', Figure::find($figure_id));
+        if(!$response->allowed()){
+            $this->authorize('accessWhenIsInAGroup', Figure::find($figure_id));
+        }
+        
         $prefix = 'data.attributes.';
         $comment_data['user_id'] = Auth::id();
         $comment_data['figure_id'] = $figure_id;
         $comment_data['title'] = $request->input($prefix.'title');
         $comment_data['description'] = $request->input($prefix.'description');
         $comment = Comment::create($comment_data);
-        //return (new CommentResource($comment))->response()->setStatusCode(201);
-        return 'error en CommentController.php, comment resource no creado';
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
+        return (new CommentResource($comment))->response()->setStatusCode(201);
     }
 
     /**

@@ -76,18 +76,31 @@ class UserTest extends TestCase
         );
 
         $body = $response->decodeResponseJson();
-        // $response->assertJsonFragment(
-        //     [
-        //         'id' => $body['data']['id'],
-        //         'attributes' => [
-        //             'name' => $body['data']['name'],
-        //             'email' => $body['data']['email'],
-        //         ],
-        //     ]
-        // );
-        //$users = User::all();
-        // UserCollection($users);
-        // $response->assertJson([]);
+
+    }
+
+    public function test_show_chose_user_on_database(){
+        factory(User::class, 1)->create(['id' => '1']);
+        // $user = factory(User::class)->create(['name' => 'alex', 'email' => 'alex2', 'id' => '2']);
+        $response = $this->json('GET', '/api/v1/users/1');
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure(
+            [
+                'data' => [
+                    [
+                        'id',
+                        'attributes' => [
+                            'name',
+                            'email'
+                        ]
+
+                    ]
+                ]
+            ]
+        );
+
+        $body = $response->decodeResponseJson();
     }
 
     public function test_login_when_parameters_are_correct()
@@ -139,8 +152,6 @@ class UserTest extends TestCase
             ]);
         $this->assertAuthenticatedAs($user);
     }
-
-
 
     public function test_edit_my_own_user_when_not_authenticated()
     {

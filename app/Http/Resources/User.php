@@ -24,4 +24,11 @@ class User extends JsonResource
             'updated_at' => $this->updated_at,
         ];
     }
+
+    /*public function with($request)
+    {
+        return [
+            'api_token' => $this->getApiToken()
+        ];
+    }*/
 }

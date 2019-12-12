@@ -8,8 +8,10 @@ use App\Figure;
 use App\Comment;
 use App\Policies\FigurePolicy;
 use App\Policies\CommentPolicy;
+use App\Policies\GroupPolicy;
 use App\Policies\UserPolicy;
 use App\User;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Figure::class => FigurePolicy::class,
         Comment::class => CommentPolicy::class,
+        Group::class => GroupPolicy::class,
         User::class => UserPolicy::class,
     ];
 
@@ -32,7 +35,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }
