@@ -63,8 +63,7 @@ class CommentController extends Controller
         $comment_data['title'] = $request->input($prefix.'title');
         $comment_data['description'] = $request->input($prefix.'description');
         $comment = Comment::create($comment_data);
-        //return (new CommentResource($comment))->response()->setStatusCode(201);
-        return 'error en CommentController.php, comment resource no creado';
+        return (new CommentResource($comment))->response()->setStatusCode(201);
     }
 
     /**

@@ -37,10 +37,23 @@ class Figure extends Model
     }
 
     /**
-     * Get the users if the figure is in a group
+     * Detach all  groups from a figure
      */
-    /*public function usersGroup()
+    public function detachGroups(Figure $figure)
     {
-        return $this->hasManyThrough('App\User', 'App\Group');
-    }*/
+        foreach ($figure->groups as $group) {
+            $figure->groups()->detach($group->id);
+        }
+    }
+
+    /**
+     * Delete comments from a figure
+     */
+    public function deleteComments(Figure $figure) {
+        foreach ($figure->comments as $comment) {
+            //$figure->$comment->dissociate();
+            $comment->delete();
+        }
+    }
+
 }

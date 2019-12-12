@@ -28,7 +28,6 @@ class FigureController extends Controller
      */
     public function index()
     {
-        //Faltaria: mostrar aquellos que tenga en otros grupos (esto último talvez no)
         $rows = Figure::count();
         if( $rows>0 ) {
             $type = 'public'; //por default se mostrarán todos los modelos públicos
@@ -157,7 +156,10 @@ class FigureController extends Controller
         $figure = Figure::find($id);
         if($figure){
             $this->authorize('delete',$figure);
-
+            //Eliminar comentarios y detach de figures_groups
+            $figure->detachGroups($figure);
+            $figure->deleteComments($figure);
+            
             $figure->delete();
             return response()->json('',204);
         }

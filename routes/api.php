@@ -26,6 +26,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('users', $prefix . 'UserController@store');
     Route::put('users/{id}', $prefix . 'UserController@update');
     Route::delete('users/{id}', $prefix . 'UserController@destroy');
+    Route::get('users/{user_id}/figures', $prefix . 'UserController@showFigures');
+    Route::get('users/{user_id}/groups', $prefix . 'UserController@showGroups');
 
     //Endpoints for Figure model
     Route::get('figures', $prefix . 'FigureController@index');

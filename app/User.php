@@ -19,9 +19,6 @@ class User extends Authenticatable implements AuthenticatableInterface
         'name',
         'email',
         'password',
-        // 'email_verified_at',
-        // 'api_token',
-        // 'remember_token'
     ];
 
     /**
@@ -41,4 +38,61 @@ class User extends Authenticatable implements AuthenticatableInterface
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the figures of the user
+     */
+    public function figures()
+    {
+        return $this->hasMany('App\Figure');
+    }
+
+    /**
+     * Get the comments of the user
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    /**
+     * Get the groups of the user
+     */
+    public function groups()
+    {
+        return $this->belongsToMany('App\Group', 'users_groups');
+    }
+
+    /**
+     * Delete all figures made from a given user
+     */
+    public function deleteFigures(User $user)
+    {
+        foreach($user->figures as $figure)
+        {
+            $figure->detachGroups($figure);
+            $figure->deleteComments($figure);
+            $figure->delete();
+        }
+    }
+
+    /**
+     * Detach all  groups from a user
+     */
+    public function detachGroups(User $user)
+    {
+        foreach ($user->groups as $group) {
+            $user->groups()->detach($group->id);
+        }
+    }
+
+    /**
+     * Delete comments made from a given user
+     */
+    public function deleteComments(User $user) {
+        foreach ($user->comments as $comment) {
+            //$figure->$comment->dissociate();
+            $comment->delete();
+        }
+    }
 }
