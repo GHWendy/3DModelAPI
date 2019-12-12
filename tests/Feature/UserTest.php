@@ -53,55 +53,55 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function test_show_all_users_on_database()
-    {
-        factory(User::class, 2)->create();
-        // $user = factory(User::class)->create(['name' => 'alex', 'email' => 'alex2', 'id' => '2']);
-        $response = $this->json('GET', '/api/v1/users/');
-        $response->assertStatus(200);
+    // public function test_show_all_users_on_database()
+    // {
+    //     factory(User::class, 2)->create();
+    //     // $user = factory(User::class)->create(['name' => 'alex', 'email' => 'alex2', 'id' => '2']);
+    //     $response = $this->json('GET', '/api/v1/users/');
+    //     $response->assertStatus(200);
 
-        $response->assertJsonStructure(
-            [
-                'data' => [
-                    [
-                        'id',
-                        'attributes' => [
-                            'name',
-                            'email'
-                        ]
+    //     $response->assertJsonStructure(
+    //         [
+    //             'data' => [
+    //                 [
+    //                     'id',
+    //                     'attributes' => [
+    //                         'name',
+    //                         'email'
+    //                     ]
 
-                    ],
-                ],
-            ]
-        );
+    //                 ],
+    //             ],
+    //         ]
+    //     );
 
-        $body = $response->decodeResponseJson();
+    //     $body = $response->decodeResponseJson();
 
-    }
+    // }
 
-    public function test_show_chose_user_on_database(){
-        factory(User::class, 1)->create(['id' => '1']);
-        // $user = factory(User::class)->create(['name' => 'alex', 'email' => 'alex2', 'id' => '2']);
-        $response = $this->json('GET', '/api/v1/users/1');
-        $response->assertStatus(200);
+    // public function test_show_chose_user_on_database(){
+    //     factory(User::class, 1)->create(['id' => '1']);
+    //     // $user = factory(User::class)->create(['name' => 'alex', 'email' => 'alex2', 'id' => '2']);
+    //     $response = $this->json('GET', '/api/v1/users/1');
+    //     $response->assertStatus(200);
 
-        $response->assertJsonStructure(
-            [
-                'data' => [
-                    [
-                        'id',
-                        'attributes' => [
-                            'name',
-                            'email'
-                        ]
+    //     $response->assertJsonStructure(
+    //         [
+    //             'data' => [
+    //                 [
+    //                     'id',
+    //                     'attributes' => [
+    //                         'name',
+    //                         'email'
+    //                     ]
 
-                    ]
-                ]
-            ]
-        );
+    //                 ]
+    //             ]
+    //         ]
+    //     );
 
-        $body = $response->decodeResponseJson();
-    }
+    //     $body = $response->decodeResponseJson();
+    // }
 
     public function test_login_when_parameters_are_correct()
     {
@@ -120,16 +120,16 @@ class UserTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    public function test_show_all_users_on_database_when_is_empty()
-    {
-        $response = $this->json('GET', '/api/v1/users/');
-        $response->assertStatus(200);
-        $response->assertJsonFragment(
-            [
-                'data' => []
-            ]
-        );
-    }
+    // public function test_show_all_users_on_database_when_is_empty()
+    // {
+    //     $response = $this->json('GET', '/api/v1/users/');
+    //     $response->assertStatus(200);
+    //     $response->assertJsonFragment(
+    //         [
+    //             'data' => []
+    //         ]
+    //     );
+    // }
 
     public function test_edit_my_info_when_im_login()
     {
@@ -168,7 +168,7 @@ class UserTest extends TestCase
                 "errors" => [
                     "code" => "ERROR-2",
                     "title" => "Unauthorized",
-                    "detail" => "You need to authenticate"
+                    "detail" => "Unauthenticated."
                 ]
             ]
         );

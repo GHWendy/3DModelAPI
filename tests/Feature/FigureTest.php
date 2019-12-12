@@ -19,7 +19,7 @@ class FigureTest extends TestCase
                 "errors" => [
                     "code" => "ERROR-2",
                     "title" => "Unauthorized",
-                    "detail" => "You need to authenticate"
+                    "detail" => "Unauthenticated."
                 ]
             ]
         );
@@ -27,6 +27,7 @@ class FigureTest extends TestCase
 
     public function test_show_all_figures_on_database_when_is_empty()
     {
+
         $response = $this->json('GET', '/api/v1/figures/');
         $response->assertStatus(200);
         $response->assertJsonFragment(
@@ -34,5 +35,5 @@ class FigureTest extends TestCase
         );
     }
 
-    
+
 }
