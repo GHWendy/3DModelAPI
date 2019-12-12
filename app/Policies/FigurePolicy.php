@@ -6,6 +6,7 @@ use App\Figure;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\DB;
 
 class FigurePolicy
 {
@@ -32,7 +33,6 @@ class FigurePolicy
     public function view(?User $user, Figure $figure)
     {
         if( $figure->type == 'private' ){
-            $user = auth('api')->user();
             if( $user ){
                 if( $user->id != $figure->user_id ){
                     return Response::deny('You do not have access to this figure');
@@ -52,7 +52,7 @@ class FigurePolicy
      */
     public function create(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -81,4 +81,25 @@ class FigurePolicy
         return $user->id == $figure->user_id ? Response::allow() : Response::deny($message);
     }
 
+    public function updateWhenIsInAGroup(User $user)
+    {
+
+    }
+    
+    public function accessWhenIsInAGroup(User $user, Figure $figure)
+    {
+        $bol = User::join('users_groups', 'users.id', '=', 'users_groups.user_id')
+                ->join('groups', 'users_groups.group_id', '=', 'groups.id')
+                ->join('figures_groups', 'groups.id', '=', 'figures_groups.group_id')
+                ->join('figures', 'figures_groups.figure_id', '=', 'figures.id')
+                ->where([['users.id', $user->id],['figures.id', $figure->id]])
+                ->exists();
+        return $bol ? Response::Allow() : Response::deny('You do not have access to this figure');
+    }
+
+    public function editType(User $user, Figure $figure)
+    {
+        $bol = DB::table('figures_groups')->where('figure_id', $figure->id)->doesntExist();
+        return $bol ? Response::Allow() : Response::deny('You cannot change the figure type when is in a group');
+    }
 }

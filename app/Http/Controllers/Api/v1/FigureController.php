@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Figure;
+use App\User;
 use App\Http\Requests\FigureRules;
 use Illuminate\Http\Request;
 use App\Http\Resources\FigureResource;
@@ -46,7 +47,17 @@ class FigureController extends Controller
                     ->when($user_id, function($query, $user_id) {
                         return $query->orWhere('user_id', $user_id);
                     });
-                })->paginate($limit);
+                });
+
+            if($user){
+                $figuresInGroups =Figure::join('figures_groups', 'figures.id', '=', 'figures_groups.figure_id')
+                    ->join('groups', 'figures_groups.group_id', '=', 'groups.id')
+                    ->join('users_groups', 'groups.id', '=', 'users_groups.group_id')
+                    ->join('users', 'users_groups.group_id', '=', 'users.id')->select('figures.*')->where('users_groups.user_id', $user_id)->distinct();
+                $figures = $figures->union($figuresInGroups)->orderBy('id')->paginate($limit);
+            }else{
+                $figures = $figures->orderBy('id')->paginate($limit);
+            }
             return response()->json(new FigureCollection($figures), 200);    
         }
         return response()->json([],200);
@@ -85,8 +96,14 @@ class FigureController extends Controller
     {
         $figure = Figure::find($id);
         if( $figure ) {
-            //return response()->json($figure->usersGroup, 200);
-            $this->authorize('view',$figure);
+            $user = auth('api')->user();
+            if($user){
+                Auth::login($user);
+            } 
+            $response = Gate::inspect('view', $figure);
+            if(!$response->allowed()){
+                $this->authorize('accessWhenIsInAGroup', $figure);
+            }
             return new FigureResource($figure);
 
             //Before
@@ -111,17 +128,18 @@ class FigureController extends Controller
     {
         $figure = Figure::find($id);
         if( $figure ) {
-            $this->authorize('update',$figure);
+            $this->authorize('update', $figure);
+            $this->authorize('editType', $figure);
             
-            $figure->name = $request->input('data.attributes.name');
-            $figure->image_preview = $request->input('data.attributes.image_preview');
-            $figure->description = $request->input('data.attributes.description');
-            $figure->x = $request->input('data.attributes.dimensions.x');
-            $figure->y = $request->input('data.attributes.dimensions.y');
-            $figure->z = $request->input('data.attributes.dimensions.z');
-            $figure->difficulty = $request->input('data.attributes.difficulty');
-            $figure->glb_download = $request->input('data.attributes.glb_download');
-            $figure->type = $request->input('data.attributes.type');
+            $figure->name = $request->input('data.attributes.name') ? $request->input('data.attributes.name') : $figure->name;
+            $figure->image_preview = $request->input('data.attributes.image_preview') ? $request->input('data.attributes.image_preview') : $figure->image_preview;
+            $figure->description = $request->input('data.attributes.description') ? $request->input('data.attributes.description') : $figure->description;
+            $figure->x = $request->input('data.attributes.dimensions.x') ? $request->input('data.attributes.dimensions.x') : $figure->x;
+            $figure->y = $request->input('data.attributes.dimensions.y') ? $request->input('data.attributes.dimensions.y') : $figure->y;
+            $figure->z = $request->input('data.attributes.dimensions.z') ? $request->input('data.attributes.dimensions.z') : $figure->z;
+            $figure->difficulty = $request->input('data.attributes.difficulty') ? $request->input('data.attributes.difficulty') : $figure->difficulty;
+            $figure->glb_download = $request->input('data.attributes.glb_download') ? $request->input('data.attributes.glb_download') : $figure->glb_download;
+            $figure->type = $request->input('data.attributes.type') ? $request->input('data.attributes.type') : $figure->type;
             $figure->save();
             return new FigureResource($figure); 
         }
