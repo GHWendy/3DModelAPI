@@ -27,6 +27,32 @@ class FigureRules extends FormRequest
      */
     public function rules()
     {
+        switch ($this->method()) {
+            case 'POST':
+                return [
+                    'data.attributes.name' => 'required',
+                    'data.attributes.image_preview' => 'url',
+                    'data.attributes.description' => 'bail|max:300',
+                    'data.attributes.dimensions.x' => 'bail|required|numeric|gt:0',
+                    'data.attributes.dimensions.y' => 'bail|required|numeric|gt:0',
+                    'data.attributes.dimensions.z' => 'bail|required|numeric|gt:0',
+                    'data.attributes.difficulty' => ['bail', 'required', Rule::in(['easy', 'normal', 'hard'])],
+                    'data.attributes.glb_download' => 'bail|required|url',
+                    'data.attributes.type' => ['bail', 'required', Rule::in(['private', 'public'])],
+                ];
+            case 'PUT':
+                return [
+                    'data.attributes.name' => 'sometimes|required',
+                    'data.attributes.image_preview' => 'sometimes|url',
+                    'data.attributes.description' => 'bail|sometimes|max:300',
+                    'data.attributes.dimensions.x' => 'bail|sometimes|required|numeric|gt:0',
+                    'data.attributes.dimensions.y' => 'bail|sometimes|required|numeric|gt:0',
+                    'data.attributes.dimensions.z' => 'bail|sometimes|required|numeric|gt:0',
+                    'data.attributes.difficulty' => ['sometimes', 'bail', 'required', Rule::in(['easy', 'normal', 'hard'])],
+                    'data.attributes.glb_download' => 'bail|sometimes|required|url',
+                    'data.attributes.type' => ['bail', 'sometimes', 'required', Rule::in(['private', 'public'])],
+                ];
+        }
         return [
             'data.attributes.name' => 'required',
             'data.attributes.image_preview' => 'url',

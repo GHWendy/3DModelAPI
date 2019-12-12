@@ -4,12 +4,24 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Figure;
+use App\Group;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+
+use App\Http\Requests\UserRules;
+
+use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserCollection;
+use Illuminate\Support\Facades\Hash;
+use App\Exceptions\ErrorHandler;
+use App\Http\Resources\FigureCollection;
 
 class UserController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:api', ['only' => ['update', 'destroy', 'showGroups']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +29,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //listar
-        //return response()->json(200);
-        return "Estás en la version 1 de esta API, FELICIDADES :D";
+        $users = User::all();
+        if ($users) {
+            return (new UserCollection($users))->response()->setStatusCode(200);
+        }
     }
 
     /**
@@ -29,17 +42,6 @@ class UserController extends Controller
      */
     public function create()
     {
-        return User::forceCreate([
-            'name' => 'El Beto 2',
-            'profile_picture' => 'www.google.com',
-            'age' => 21,
-            'gender' => 'male',
-            'email' => 'hc23w@gmail.com',
-            'email_verified_at' => '2019-12-07 22:43:01',
-            'password' => Hash::make('12345678'),
-            'api_token' => Str::random(80),
-            'remember_token' => '2019-12-07 22:43:01'
-        ]);
     }
 
     /**
@@ -48,10 +50,16 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRules $request)
     {
         //Crear usuario
-        return response()->json(200);
+        $validated = $request->validated();
+
+        $user = User::create($request->get('data')['attributes']);
+        $user->password = Hash::make($request->input('data.attributes.password'));
+        $user->api_token = Str::random(80);
+        $user->save();
+        return (new UserResource($user))->response()->setStatusCode(201);
     }
 
     /**
@@ -63,18 +71,11 @@ class UserController extends Controller
     public function show($id)
     {
         //mostrar un usuario
-        return response()->json(200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $user = User::find($id);
+        if ($user) {
+            return (new UserResource($user))->response()->setStatusCode(200);
+        }
+        (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
     }
 
     /**
@@ -84,10 +85,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRules $request, $id)
     {
+        $validated = $request->validated();
         //Actualizar
-        return response()->json(200);
+        $user = User::find($id);
+        if ($user) {
+            $this->authorize('update', $user);
+            $user->name = $request->input('data.attributes.name');
+            $user->email = $request->input('data.attributes.email');
+            $user->password = Hash::make($request->input('data.attributes.password'));
+            $user->save();
+            return (new UserResource($user))->response()->setStatusCode(200);
+        }
+        (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
     }
 
     /**
@@ -99,16 +110,46 @@ class UserController extends Controller
     public function destroy($id)
     {
         //Eliminar
-        return response()->json(200);
+        $user = User::find($id);
+        if ($user) {
+            $this->authorize('delete', $user);
+            $user->deleteFigures($user);
+            $user->detachGroups($user);
+            $user->deleteComments($user);
+
+            $user->delete();
+            return response()->json(200);
+        }
+        (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
+        return 'estas logueado por lo tanto existes, entonces siempre debería regresar o
+        que fue exitoso o que no eres el usuario con el id dado';
     }
 
-    public function showFigures()
+    public function showFigures($user_id)
     {
-        return response()->json(200);
+        $limit = request()->has('limit') ? (int) request('limit') : 10;
+        $userH = User::find($user_id);
+        if ($userH) {
+            $userA = auth('api')->user();
+
+            $figures = Figure::where('user_id', $user_id)
+                        ->when($userA, function ($query, $userA) use($user_id) {
+                            return $query->when($userA->id != $user_id, function ($query) { //The user is logged in and tries to get another user figures
+                                return $query->where('type', 'public');
+                            });
+                        }, function ($query) {
+                            return $query->where('type', 'public'); //A user tries to get models from another figure
+                        });
+            return response()->json(new FigureCollection($figures->orderBy('id')->paginate($limit)), 200);
+        }
+        (new ErrorHandler())->notFound('There is not a user with the id: ' . $user_id);
+        
+        
+        return response()->setStatusCode(200);
     }
 
     public function showGroups()
     {
-        return response()->json(200);
+        return response()->setStatusCode(200);
     }
 }
