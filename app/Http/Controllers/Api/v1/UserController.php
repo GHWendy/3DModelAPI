@@ -60,7 +60,7 @@ class UserController extends Controller
         $user->password = Hash::make($request->input('data.attributes.password'));
         $user->api_token = Str::random(80);
         $user->save();
-        return (new UserResource($user))->response()->setStatusCode(201);
+        return (new UserResource($user))->response()->header('api_token', $user->getApiToken())->setStatusCode(201);
     }
 
     /**
@@ -97,7 +97,7 @@ class UserController extends Controller
             $user->email = $request->input('data.attributes.email');
             $user->password = Hash::make($request->input('data.attributes.password'));
             $user->save();
-            return (new UserResource($user))->response()->header('api_token', $user->getApiToken())->setStatusCode(200);
+            return (new UserResource($user))->response()->setStatusCode(200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
     }
@@ -114,11 +114,14 @@ class UserController extends Controller
         $user = User::find($id);
         if ($user) {
             $this->authorize('delete', $user);
-            $user->deleteFigures($user);
-            $user->detachGroups($user);
-            $user->deleteComments($user);
-
-            $user->delete();
+            //$user->deleteFigures($user);
+            //$user->detachGroups($user);
+            //$user->deleteComments($user);
+            $figures =  $user->deleteFigures($user);
+            $groups = $user->detachGroups($user);
+            $comment = $user->deleteComments($user);
+            return response()->json(['figures' => $figures, 'groups' => $groups, 'comments' => $comment],200);
+            //$user->delete();
             return response()->json(200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);

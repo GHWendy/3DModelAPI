@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
             ];
             return response()->json($response, 403);
             //return Response::json($response, JsonResponse::HTTP_FORBIDDEN);
-        }else if ($exception instanceof NotFoundHttpException) {
+        }/*else if ($exception instanceof NotFoundHttpException) {
             $response = ['errors' => 
                 [
                     'code' => 'ERROR-4',

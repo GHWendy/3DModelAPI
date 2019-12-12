@@ -60,6 +60,14 @@ class User extends Authenticatable implements AuthenticatableInterface
     }
 
     /**
+     * Get the groups created by the user
+     */
+    public function myCreatedGroups()
+    {
+        return $this->hasMany('App\Group', 'creator_id');
+    }
+
+    /**
      * Get the groups of the user
      */
     public function groups()
@@ -72,6 +80,7 @@ class User extends Authenticatable implements AuthenticatableInterface
      */
     public function deleteFigures(User $user)
     {
+        return $user->figures;
         foreach($user->figures as $figure)
         {
             $figure->detachGroups($figure);
@@ -85,6 +94,7 @@ class User extends Authenticatable implements AuthenticatableInterface
      */
     public function detachGroups(User $user)
     {
+        return $user->groups;
         foreach ($user->groups as $group) {
             $user->groups()->detach($group->id);
         }
@@ -94,6 +104,7 @@ class User extends Authenticatable implements AuthenticatableInterface
      * Delete comments made from a given user
      */
     public function deleteComments(User $user) {
+        return $user->comments;
         foreach ($user->comments as $comment) {
             //$figure->$comment->dissociate();
             $comment->delete();
