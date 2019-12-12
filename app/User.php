@@ -17,10 +17,11 @@ class User extends Authenticatable implements AuthenticatableInterface
      */
     protected $fillable = [
         'name',
-        'profile_picture',
-        'age',
-        'gender',
         'email',
+        'password',
+        // 'email_verified_at',
+        // 'api_token',
+        // 'remember_token'
     ];
 
     /**

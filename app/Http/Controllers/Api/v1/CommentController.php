@@ -27,7 +27,7 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($figure_id)
     {
         $comments = Comment::paginate(10);
         return response()->json(new CommentCollection($comments),200);
@@ -41,7 +41,7 @@ class CommentController extends Controller
         $comments = Comment::where('figure_id', $figure_id)->paginate($limit);
 
         return response()->json(new CommentCollection($comments),200);
-        
+
     }
 
     /**
@@ -63,7 +63,8 @@ class CommentController extends Controller
         $comment_data['title'] = $request->input($prefix.'title');
         $comment_data['description'] = $request->input($prefix.'description');
         $comment = Comment::create($comment_data);
-        return (new CommentResource($comment))->response()->setStatusCode(201);
+        //return (new CommentResource($comment))->response()->setStatusCode(201);
+        return 'error en CommentController.php, comment resource no creado';
     }
 
     /**
