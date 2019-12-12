@@ -8,15 +8,15 @@ class FigureCollection extends ResourceCollection
 {
 
     public $collects = "App\Http\Resources\FigureResource";
-    //private $pagination;
+    private $pagination;
 
-    /*public function __construct($resource) {
+    public function __construct($resource) {
         $this->pagination = [
             'total' => $resource->total(),
         ];
         $resource = $resource->getCollection();
         parent::__construct($resource);
-    }*/
+    
 
     /**
      * Transform the resource collection into an array.

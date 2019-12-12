@@ -20,6 +20,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     $prefix = 'Api\\v1\\';
 
+
+    //Endpoints for Groups
+    //Create a group
+	Route::post('groups' , $prefix .'GroupController@store');
+	//Get a group
+	Route::get('groups/{id}', $prefix ."GroupController@show");
+    //Get members
+	Route::get('groups/{id}/members', $prefix . "GroupController@showMembers");
+	//Update group
+	Route::put('groups/{id}' , $prefix .  "GroupController@update");	
+	//Add user to group
+	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");	
+	//Add a figure to a group
+	Route::put('groups/{id}/figures' , $prefix .  "GroupController@updateFigures");
+	//Delete a group
+	Route::delete('groups/{id}' , $prefix .  "GroupController@destroy");
+	
+	//Delete a member of a group
+	Route::delete('groups/{group_id}/members/{id}' , $prefix .  "GroupController@removeMember");
+	
+	//Delete a figure of a group
+	Route::delete('groups/{group_id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
+
     //Endpoints for the User model
     Route::get('users', $prefix . 'UserController@index');
     Route::get('users/{id}', $prefix . 'UserController@show');
@@ -28,6 +51,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::delete('users/{id}', $prefix . 'UserController@destroy');
     Route::get('users/{user_id}/figures', $prefix . 'UserController@showFigures');
     Route::get('users/{user_id}/groups', $prefix . 'UserController@showGroups');
+
 
     //Endpoints for Figure model
     Route::get('figures', $prefix . 'FigureController@index');
@@ -54,5 +78,4 @@ Route::post('login', 'Auth\\LoginController@authenticate');
 // Route::get('/users', function (Request $request){
 //     return '';
 // });
-
 
