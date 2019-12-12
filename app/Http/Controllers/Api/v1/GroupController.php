@@ -1,11 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
-
-
-
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
