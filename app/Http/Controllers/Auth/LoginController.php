@@ -45,7 +45,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         if(Auth::attempt($credentials)) {
             $user = Auth::user();
-            $userResource = (new UserResource($user))->response()->header('api_token', $user->getApiToken());
+            $userResource = (new UserResource($user))->response()->header('api_token', $user->getApiToken())->setStatusCode(200);
             return $userResource;
         } else {
             (new ErrorHandler())->unauthorized('Invalid credentials');

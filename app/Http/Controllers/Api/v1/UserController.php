@@ -97,7 +97,7 @@ class UserController extends Controller
             $user->email = $request->input('data.attributes.email');
             $user->password = Hash::make($request->input('data.attributes.password'));
             $user->save();
-            return (new UserResource($user))->response()->setStatusCode(200);
+            return (new UserResource($user))->response()->header('api_token', $user->getApiToken())->setStatusCode(200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
     }
@@ -144,9 +144,6 @@ class UserController extends Controller
             return response()->json(new FigureCollection($figures->orderBy('id')->paginate($limit)), 200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $user_id);
-        
-        
-        return response()->setStatusCode(200);
     }
 
     public function showGroups()
