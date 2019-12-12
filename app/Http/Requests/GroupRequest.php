@@ -50,7 +50,7 @@ class GroupRequest extends FormRequest
                 break;
         }
 
-        return $rules;
+        return $rules = [];
     }
 
     public function messages()
