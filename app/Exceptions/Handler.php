@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
                 [
                     'code' => 'ERROR-2',
                     'title' => 'Unauthorized',
-                    'detail' => 'You need to authenticate'
+                    'detail' => $exception->getMessage() ? $exception->getMessage() : 'You need to authenticate'
                 ]
             ];
             return response()->json($response, 401);

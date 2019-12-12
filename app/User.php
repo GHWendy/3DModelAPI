@@ -39,6 +39,10 @@ class User extends Authenticatable implements AuthenticatableInterface
         'email_verified_at' => 'datetime',
     ];
 
+    public function getApiToken()
+    {
+        return $this->api_token;
+    }
     /**
      * Get the figures of the user
      */
