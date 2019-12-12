@@ -16,6 +16,7 @@ use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Hash;
 use App\Exceptions\ErrorHandler;
 use App\Http\Resources\FigureCollection;
+use App\Http\Resources\GroupCollection;
 
 class UserController extends Controller
 {
@@ -113,19 +114,15 @@ class UserController extends Controller
         $user = User::find($id);
         if ($user) {
             $this->authorize('delete', $user);
-            //$user->deleteFigures($user);
-            //$user->detachGroups($user);
-            //$user->deleteComments($user);
-            $figures =  $user->deleteFigures($user);
-            $groups = $user->detachGroups($user);
-            $comment = $user->deleteComments($user);
-            return response()->json(['figures' => $figures, 'groups' => $groups, 'comments' => $comment],200);
-            //$user->delete();
+            $user->deleteFigures($user);
+            $user->detachGroups($user);
+            $user->deleteComments($user);
+            $user->deleteGroups($user);
+
+            $user->delete();
             return response()->json(200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
-        return 'estas logueado por lo tanto existes, entonces siempre debería regresar o
-        que fue exitoso o que no eres el usuario con el id dado';
     }
 
     public function showFigures($user_id)
@@ -150,6 +147,7 @@ class UserController extends Controller
 
     public function showGroups()
     {
-        return response()->setStatusCode(200);
+        $user = Auth::user();
+        return response()->json(new GroupCollection($user->groups), 200);
     }
 }

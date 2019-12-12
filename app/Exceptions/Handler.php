@@ -76,7 +76,7 @@ class Handler extends ExceptionHandler
             ];
             return response()->json($response, 403);
             //return Response::json($response, JsonResponse::HTTP_FORBIDDEN);
-        }/*else if ($exception instanceof NotFoundHttpException) {
+        }else if ($exception instanceof NotFoundHttpException) {
             $response = ['errors' => 
                 [
                     'code' => 'ERROR-4',
@@ -85,15 +85,15 @@ class Handler extends ExceptionHandler
                 ]
             ];
             return response()->json($response, 404);
-        }/*else if($exception instanceof QueryException) {
+        }else if($exception instanceof QueryException) {
             $response = ['errors' => [
                 'code' => 'ERROR-1',
                 'title' => 'Bad request',
                 'detail' => "There was an error in your request"
             ]];
             return response()->json($response, 400);
-        }*/
-        /*else {
+        }
+        else {
             $response = ['errors' => 
                 [
                     'code' => 'ERROR-7',
@@ -102,12 +102,12 @@ class Handler extends ExceptionHandler
                 ]
             ];
             return response()->json($response, 500);
-        }*/
+        }
     
         
 
         //return Response::json([(array) $exception], JsonResponse::HTTP_UNAUTHORIZED);
         //return response()->json([get_class($exception)], 500);
-        return parent::render($request, $exception);
+        //return parent::render($request, $exception);
     }
 }

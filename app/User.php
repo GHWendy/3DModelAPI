@@ -90,6 +90,18 @@ class User extends Authenticatable implements AuthenticatableInterface
     }
 
     /**
+     * Delete all groups made from a given user
+     */
+    public function deleteGroups(User $user)
+    {
+        foreach($user->myCreatedGroups as $group){
+            $group->detachUsers($group);
+            $group->detachFigures($group);
+            $group->delete();
+        }
+    }
+
+    /**
      * Detach all  groups from a user
      */
     public function detachGroups(User $user)
