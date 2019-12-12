@@ -8,15 +8,32 @@ use Tests\TestCase;
 
 class FigureTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $response = $this->get('/');
 
-        $response->assertStatus(200);
+    public function test_create_a_figure_with_unauthenticated_user()
+    {
+
+        $response = $this->json('POST', '/api/v1/figures/');
+        $response->assertStatus(401);
+        $response->assertJsonFragment(
+            [
+                "errors" => [
+                    "code" => "ERROR-2",
+                    "title" => "Unauthorized",
+                    "detail" => "Unauthenticated."
+                ]
+            ]
+        );
     }
+
+    public function test_show_all_figures_on_database_when_is_empty()
+    {
+
+        $response = $this->json('GET', '/api/v1/figures/');
+        $response->assertStatus(200);
+        $response->assertJsonFragment(
+            []
+        );
+    }
+
+
 }

@@ -29,9 +29,9 @@ Route::group(['prefix' => 'v1'], function () {
     //Get members
 	Route::get('groups/{id}/members', $prefix . "GroupController@showMembers");
 	//Update group
-	Route::put('groups/{id}' , $prefix .  "GroupController@update");	
+	Route::put('groups/{id}' , $prefix .  "GroupController@update");
 	//Add user to group
-	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");	
+	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");
 	//Add a figure to a group
 	Route::put('groups/{id}/figures' , $prefix .  "GroupController@updateFigures");
 	//Delete a group
@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1'], function () {
 	
 	//Delete a member of a group
 	Route::delete('groups/{group_id}/members/{id}' , $prefix .  "GroupController@removeMember");
-	
+
 	//Delete a figure of a group
 	Route::delete('groups/{group_id}/figures/{id}' , $prefix .  "GroupController@removeFigure");
 
@@ -65,8 +65,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('figures/{figure_id}/comments', $prefix . 'CommentController@store');
     Route::delete('figures/{figure_id}/comments/{id}', $prefix . 'CommentController@destroy');
 
-    
-    //También se pueden proteger los guards así 
+
+    //También se pueden proteger los guards así
     //Route::middleware('auth:api')->post('figures', $prefix . 'FigureController@store');
 
     //Ejemplo de ruta para la versión 1

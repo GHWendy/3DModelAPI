@@ -1,22 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Figure;
 use App\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
 use App\Http\Requests\UserRules;
-
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Hash;
 use App\Exceptions\ErrorHandler;
 use App\Http\Resources\FigureCollection;
 use App\Http\Resources\GroupCollection;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
