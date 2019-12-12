@@ -9,6 +9,17 @@ use Tests\TestCase;
 
 class GroupTest extends TestCase
 {
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testBasicTest()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
 
     // public function test_create_a_group_with_unauthenticated_user()
     // {
