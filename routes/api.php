@@ -28,14 +28,11 @@ Route::group(['prefix' => 'v1'], function () {
     //Get members
 	Route::get('groups/{id}/members', $prefix . "GroupController@showMembers");
 	//Update group
-	Route::put('groups/{id}' , $prefix .  "GroupController@update");
-	
+	Route::put('groups/{id}' , $prefix .  "GroupController@update");	
 	//Add user to group
-	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");
-	
+	Route::put('groups/{id}/members' , $prefix .  "GroupController@updateMembers");	
 	//Add a figure to a group
 	Route::put('groups/{id}/figures' , $prefix .  "GroupController@updateFigures");
-	
 	//Delete a group
 	Route::delete('groups/{id}' , $prefix .  "GroupController@destroy");
 	

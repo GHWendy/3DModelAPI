@@ -29,7 +29,14 @@ class GroupRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
+        $figuresRequest= $request->data['attributes']['figures']
+
+        $rules = ['data.attributes.*.members' => Rule::unique('users_groups')->where(function ($query) use ($request) {
+                                                    return $query ->where('user_id',$value) ->where('group_id',$id);}),
+
+                'data.attributes.*.figures' => Rule::unique('figures_groups')->where(function ($query) use ($request) {
+                                                    return $query ->where('figure_id',$value) ->where('group_id',$id);})
+                ];
 
         switch ($this-> method()) {
             case 'POST':
@@ -44,7 +51,10 @@ class GroupRequest extends FormRequest
                 break;   
             case 'PUT': 
                 $rules = [
-                //TODO:validate the put things , validate que no se repita el id de una figura o de un modelo
+                // 'data.attributes.*.members' => 
+
+                // 'data.atributes.*.figures' => 'unique: figures_groups,id',
+
                ];
                 break;         
             default:

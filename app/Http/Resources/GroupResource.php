@@ -17,13 +17,14 @@ class GroupResource extends JsonResource
          $attributes = [
             'name' => $this->name,
             'description' => $this->description,
-            'members' => $this->users,
+            'members'=> [1,2,3],
             //'members' => UserResource::collection($this->users)->pluck('id'),
             'figures' => FigureResource::collection($this->figures)->pluck('id'),
         ];
         $data = [
             'group_id' => $this->id,
             'attributes' => $attributes,
+            'creator_id' => $this->creator_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

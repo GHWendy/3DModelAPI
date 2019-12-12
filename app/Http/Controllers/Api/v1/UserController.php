@@ -34,7 +34,7 @@ class UserController extends Controller
             'profile_picture' => 'www.google.com',
             'age' => 21,
             'gender' => 'male',
-            'email' => 'hpech2@gmail.com',
+            'email' => 'hc23w@gmail.com',
             'email_verified_at' => '2019-12-07 22:43:01',
             'password' => Hash::make('12345678'),
             'api_token' => Str::random(80),

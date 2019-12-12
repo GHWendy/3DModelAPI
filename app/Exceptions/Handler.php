@@ -76,34 +76,34 @@ class Handler extends ExceptionHandler
             ];
             return response()->json($response, 403);
             //return Response::json($response, JsonResponse::HTTP_FORBIDDEN);
-        } //else if ($exception instanceof NotFoundHttpException) {
-        //     $response = ['errors' => 
-        //         [
-        //             'code' => 'ERROR-4',
-        //             'title' => 'Not found',
-        //             'detail' => $exception->getMessage() != null ? $exception->getMessage() : 'The requested resource was not found'
-        //         ]
-        //     ];
-        //     return response()->json($response, 404);
-         //}
-         /*else if($exception instanceof QueryException) {
+        } else if ($exception instanceof NotFoundHttpException) {
+             $response = ['errors' => 
+                 [
+                     'code' => 'ERROR-4',
+                     'title' => 'Not found',
+                     'detail' => $exception->getMessage() != null ? $exception->getMessage() : 'The requested resource was not found'
+                 ]
+             ];
+             return response()->json($response, 404);
+         }
+         else if($exception instanceof QueryException) {
             $response = ['errors' => [
                 'code' => 'ERROR-1',
                 'title' => 'Bad request',
                 'detail' => "There was an error in your request"
             ]];
             return response()->json($response, 400);
-        }*/
-        /*else {
-            $response = ['errors' => 
-                [
-                    'code' => 'ERROR-7',
-                    'title' => 'Internal Server Error',
-                    'detail' => 'Upsi dupsi, there was an error on the server. :s'
-                ]
-            ];
-            return response()->json($response, 500);
-        }*/
+        }
+        // else {
+        //     $response = ['errors' => 
+        //         [
+        //             'code' => 'ERROR-7',
+        //             'title' => 'Internal Server Error',
+        //             'detail' => 'Upsi dupsi, there was an error on the server. :s'
+        //         ]
+        //     ];
+        //     return response()->json($response, 500);
+        // }
     
         
 
