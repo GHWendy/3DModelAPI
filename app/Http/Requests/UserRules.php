@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Exceptions\ErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 use illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -58,18 +59,6 @@ class UserRules extends FormRequest
      * @return \Illuminate\Http\Exceptions\HttpResponseException
      */
     protected function failedValidation(Validator $validator){
-        $response = ['errors' => []];
-        $arrayTemp = [];
-        foreach($validator->errors()->toArray() as $key => $value){
-            //Form the array with a specific representacion
-            $arrayTemp = [
-                'code' => 'Error-6',
-                'source' => $key,
-                'title' => 'Unprocessable Entity',
-                'detail' => $value[0],
-            ];
-            array_push($response['errors'], $arrayTemp);
-        }
-        throw new HttpResponseException(response()->json($response,422));
+        (new ErrorHandler())->unprocessableEntity($validator);
     }
 }

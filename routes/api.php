@@ -35,9 +35,16 @@ Route::group(['prefix' => 'v1'], function () {
     Route::put('users/{id}', $prefix . 'UserController@update');
     Route::delete('users/{id}', $prefix . 'UserController@destroy');
 
-    Route::get('figures/{figure_id}/comments', $prefix . 'CommentController@index');
-    Route::post('figures/{figure_id}/comments', $prefix . 'CommentController@store');
-    Route::delete('figures/{figure_id}/comments/{comment_id}', $prefix . 'CommentController@destroy');
+     //Endpoints for Figure model
+     Route::get('figures', $prefix . 'FigureController@index');
+     Route::get('figures/{id}', $prefix . 'FigureController@show');
+     Route::post('figures', $prefix . 'FigureController@store');
+     Route::put('figures/{id}', $prefix . 'FigureController@update');
+     Route::delete('figures/{id}', $prefix . 'FigureController@destroy');
+     //Endpoints for Comment model
+     Route::get('figures/{figure_id}/comments', $prefix . 'CommentController@showAllFigureComments');
+     Route::post('figures/{figure_id}/comments', $prefix . 'CommentController@store');
+     Route::delete('figures/{figure_id}/comments/{id}', $prefix . 'CommentController@destroy');
 
 });
 

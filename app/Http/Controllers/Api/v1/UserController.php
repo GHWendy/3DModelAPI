@@ -132,8 +132,6 @@ class UserController extends Controller
             return response()->json(200);
         }
         (new ErrorHandler())->notFound('There is not a user with the id: ' . $id);
-        return 'estas logueado por lo tanto existes, entonces siempre debería regresar o
-        que fue exitoso o que no eres el usuario con el id dado';
     }
 
     public function showFigures()
@@ -146,14 +144,4 @@ class UserController extends Controller
         return response()->setStatusCode(200);
     }
 
-    private function hasheo()
-    {
-        $password = 'Hola';
-        $Hasheado = Hash::make($password);
-        $devuelto = Hash::check('Hola', $Hasheado);
-        if ($devuelto) {
-            return  'Accedido';
-        }
-        return 'no';
-    }
 }
